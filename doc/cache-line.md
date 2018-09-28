@@ -107,4 +107,4 @@
 #### 参考资料
 - [cpu cache](https://en.wikipedia.org/wiki/CPU_cache)
 - [cache coherency](https://en.wikipedia.org/wiki/Cache_coherence)
-- [false sharing](https://en.wikipedia.org/wiki/False_sharing)PK
+- [false sharing](https://en.wikipedia.org/wiki/False_sharing)
