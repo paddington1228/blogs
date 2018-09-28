@@ -22,7 +22,8 @@
 - 在单核CPU结构中，为了缓解CPU指令流水中cycle冲突，L1分成了指令（L1P）和数据（L1D）两部分，而L2则是指令和数据共存
 - 多核CPU的结构与单核相似，但是多了所有CPU共享的L3三级缓存。在多核CPU的结构中，L1和L2是CPU私有的，L3则是所有CPU核心共享的
 - **因为L3是所有CPU核心共享，刨除L3，4 CPU core + L1 + L2可以组成一个UMA-NUMA-Mix架构中的一个CPU Package**
-图：multi-cpu
+图：
+![](https://github.com/paddington1228/blogs/blob/master/images/cache-line/multi-cpu-small.png)
 
 
 ##### CPU Cache意义
