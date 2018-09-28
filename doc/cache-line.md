@@ -1,5 +1,5 @@
 
-#### 引言
+### 引言
 - **本博文会逐一讲解NUMA、CPU Cache结构、CPU Cache Line、Cache Coherency、Cache Bouncing、False Sharing**
 - 首先能够想到的问题有：
   1. NUMA是什么，和CPU Cache Line有什么关系？
@@ -8,7 +8,7 @@
   4. Cache Bouncing和False Sharing是什么？
   5. 了解了这些之后，我们能够在编程中注意什么？
 
-#### NUMA
+### NUMA
 ![](https://github.com/paddington1228/blogs/blob/master/images/cache-line/uma-numa.png)
 
 - 与NUMA对应的是UMA（Uniform Memory Access），它们描述了在多核处理器上CPU和共享内存的排列方式
@@ -17,8 +17,8 @@
 - NUMA架构的优势在于作为一个分层的共享内存结构能够通过尽可能多的访问本地内存提高访问数据的速度，从而提高程序性能
 - 现在多核处理器中，一般采用两者结合的形式，多个CPU组成CPU Package，每个CPU Package都有自己的内存，同一个CPU Package中不同CPU按照UMA结构排列，不同CPU Package之间按照NUMA结构排列，一个CPU Package可以访问另外一个CPU Package所拥有的内存
 
-#### CPU Cache
-##### 结构
+### CPU Cache
+#### 结构
 - 在单核CPU结构中，为了缓解CPU指令流水中cycle冲突，L1分成了指令（L1P）和数据（L1D）两部分，而L2则是指令和数据共存
 - 多核CPU的结构与单核相似，但是多了所有CPU共享的L3三级缓存。在多核CPU的结构中，L1和L2是CPU私有的，L3则是所有CPU核心共享的
 - **因为L3是所有CPU核心共享，刨除L3，4 CPU core + L1 + L2可以组成一个UMA-NUMA-Mix架构中的一个CPU Package**
@@ -26,7 +26,7 @@
 ![](https://github.com/paddington1228/blogs/blob/master/images/cache-line/multi-cpu-small.png)
 
 
-##### CPU Cache意义
+#### CPU Cache意义
 - 为什么需要CPU Cache？因为CPU的频率太快了，快到主存跟不上，这样在处理器时钟周期内，CPU常常需要等待主存，浪费资源。所以Cache的出现，是为了缓解CPU和内存之间速度的不匹配问题
 - CPU Cache有什么意义？Cache的容量远远小于主存，因此出现Cache Miss在所难免，既然Cache不能包含CPU所需要的所有数据，那么Cache的存在真的有意义吗？当然是有意义的——局部性原理：
   A. 时间局部性：如果某个数据被访问，那么在不久的将来它很可能被再次访问
@@ -40,7 +40,7 @@
 #### Cache Coherency
 - 假设这样的场景：当多线程程序P运行在多核机器上，P中所有线程共享资源M，当P中线程A将M读入Cache C1，B线程将M读入Cache C2，A线程对M进行修改，当B线程使用M时怎么保证B线程读到的是A修改后的？**这就需要Cache Coherency：用于保证多线程程序运行在多核机器上，CPU Cache中缓存共享数据的一致性**
 
-##### 写回主存和cache操作
+#### 写回主存和cache操作
 - CPU Cache中的数据在修改后要确保能够**写会主存**，写回方式：
   1. 写通：每次CPU修改了cache中的内容，立即更新到内存，也就意味着每次CPU写共享数据，都会导致总线事务，因此这种方式常常会引起总线事务的竞争，高一致性，但是效率非常低
   2. 写回：每次CPU修改了cache中的数据，不会立即更新到内存，而是等到cache line在某一个必须或合适的时机才会更新到内存中
@@ -59,7 +59,7 @@
   3. shared：当前CPU和其他CPU中都有共同数据，并且和主存中的数据一致
   4. invalid：当前CPU中的数据失效，数据应该从主存中获取，其他CPU中可能有数据也可能无数据，当前CPU中的数据和主存被认为是不一致
 
-##### cache操作和状态转换
+#### cache操作和状态转换
 - 初始场景：在最初的时候，所有CPU中都没有数据，某一个CPU发生读操作，此时发生RR，数据从主存中读取到当前CPU的cache，状态为E（独占，只有当前CPU有数据，且和主存一致），此时如果有其他CPU也读取数据，则状态修改为S（共享，多个CPU之间拥有相同数据，并且和主存保持一致），如果其中某一个CPU发生数据修改，那么该CPU中数据状态修改为M（拥有最新数据，和主存不一致，但是以当前CPU中的为准），并通知其他拥有该数据的CPU数据失效，其他CPU中的cache line状态修改为I（失效，和主存中的数据被认为不一致，数据不可用应该重新获取）
 - modify
 场景：当前CPU中数据的状态是modify，表示当前CPU中拥有最新数据，虽然主存中的数据和当前CPU中的数据不一致，但是以当前CPU中的数据为准
@@ -92,20 +92,20 @@
 3. RR：监听到总线发生RR操作，表示有其他CPU读取内存，和本地cache无关，状态不变
 4. RW：监听到总线发生RW操作，表示有其他CPU写主存，和本地cache无关，状态不变
 
-#### Cache Bouncing
+### Cache Bouncing
 - 试想，一个多线程程序P在多核CPU上共享内存资源M，多个线程均可以读取和修改M，那每个线程依附的CPU中的Cache的Cache Line为保证数据的一致性，要不停的做状态转换和数据读取，即为：Cache Bouncing
 - 同时数据的读取更多的是Remote Read和Remote Write操作，**当CPU能够从cache中拿到有效数据的时候，消耗几个CPU cycle，如果发生Cache Miss，则会消耗几十上百个CPU Cycle**
 - **Cache Bouncing问题会严重影响程序性能，由于实现Cache一致性往往有硬件锁，Cache Bouncing是一种隐式的的全局竞争**
 - 了解到Cache Bouncing（使用共享内存）会影响程序性能后，应该更多使用thread local变量来避免Cache Bouncing
 - 多生产者多消费者队列以及多线程共享资源存在比较验证的Cache Bouncing问题，brpc TimerThread的设计相对sofa的timer规避了Cache Bouncing问题，推荐学习借鉴消除Cache Bouncing的思路
 
-#### False Sharing
+### False Sharing
 - cache bouncing使访问频繁修改的变量的开销陡增，甚至还会使访问同一个cacheline中不常修改的变量也变慢，这个现象是[false sharing](https://en.wikipedia.org/wiki/False_sharing),  关于false sharing的详细分析，亦可参考[CoolShell CPU Cache Line](https://coolshell.cn/articles/10249.html)
 
-#### 总结
+### 总结
 - 为了有效利用多核处理器，我们采用多线程编程，为了降低CPU和内存访问速度不同带来的性能影响，我们增加了CPU Cache，但如果不细致的了解CPU Cache，大量使用共享内存，那么为了保证Cache一致性需要大量耗时操作，进而引发Cache Bouncing和False Sharing问题，在了解CPU Cache是如何工作之后，当我们编写程序时，需要尽量采取合理的数据结构和有效利用thread local cache来提高程序性能
 
-#### 参考资料
+### 参考资料
 - [cpu cache](https://en.wikipedia.org/wiki/CPU_cache)
 - [cache coherency](https://en.wikipedia.org/wiki/Cache_coherence)
 - [false sharing](https://en.wikipedia.org/wiki/False_sharing)
