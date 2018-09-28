@@ -1,3 +1,4 @@
+
 #### 引言
 - **本博文会逐一讲解NUMA、CPU Cache结构、CPU Cache Line、Cache Coherency、Cache Bouncing、False Sharing**
 - 首先能够想到的问题有：
@@ -106,4 +107,4 @@
 #### 参考资料
 - [cpu cache](https://en.wikipedia.org/wiki/CPU_cache)
 - [cache coherency](https://en.wikipedia.org/wiki/Cache_coherence)
-- [false sharing](https://en.wikipedia.org/wiki/False_sharing)PK 
+- [false sharing](https://en.wikipedia.org/wiki/False_sharing)PK
