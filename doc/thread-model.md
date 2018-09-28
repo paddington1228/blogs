@@ -4,7 +4,7 @@
 
 ### Reactor
 #### 执行时序
-![Alt text](./reactor-workflow.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thread-model/reactor-workflow.png)
 
 #### 具体步骤
 1. 主程序调用接口注册处理事件的handler
@@ -13,7 +13,7 @@
 
 #### 剖析
 - 简易执行图：
-![Alt text](./reactor-delay.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thread-model/reactor-delay.png)
 
 ##### 实现
 - reactor实现了一个**被动**的事件分离和分发模型，调用select和epoll之后，操作系统可以在多个事件源上等待
@@ -30,7 +30,7 @@
 
 ### Half Sync/Half Reactor
 #### 执行时序
-![Alt text](./half-sync-half-reactor.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thread-model/half-sync-half-reactor.png)
 
 #### 剖析
 
@@ -51,7 +51,7 @@
 
 ### Proactor
 #### 执行时序
-![Alt text](./proactor.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thread-model/proactor.png)
 
 #### 剖析
 - [boost asio](https://www.boost.org/doc/libs/1_67_0/doc/html/boost_asio/overview/core/async.html)使用了proactor模式
@@ -71,7 +71,7 @@
 #### 缺点
 1. reactor面临的问题1-4，proactor均没有很好的解决，如下图（图片来源brpc文档）
 2. **由于cache一致性的限制，多线程reactor并不能获得线性于核心数的性能，在特定的场景中，粗糙的多线程reactor实现跑在24核上甚至没有精致的单线程reactor实现跑在1个核上快（摘自brpc文档）**
-![Alt text](./multi-reactor.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thread-model/multi-reactor.png)
 
 
 ### leader/followers
@@ -80,7 +80,7 @@
 - 如何更好的复用IO handle set和worker thread pool便成为了leader/followers模式的关键
 
 #### 执行时序
-![Alt text](./leader-followers.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thread-model/leader-followers.png)
 
 
 #### 剖析
