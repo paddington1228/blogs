@@ -28,4 +28,4 @@
 
 #### cache结构图
 - 请查看流程图
-![](https://github.com/yingsun1228/perf-optimization/blob/master/img/lock-free-lru-cache.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/lru-cache/lock-free-lru-cache.png)
