@@ -16,11 +16,11 @@
 - 本博文只简单列举分析ptmalloc必要的数据结构，更详尽的请参考[ptmalloc](https://paper.seebug.org/papers/Archive/refs/heap/glibc%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86ptmalloc%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.pdf)
 
 ##### chunk
-![Alt text](./ptmalloc-chunk.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/ptmalloc/ptmalloc-chunk.png)
 - 每个chunk包含其前后chunk的大小用于确定前后chunk的起始位置，以及当前chunk的大小+状态信息（用于chunk的合并），以及真正的用户数据
 
 ##### bins
-![Alt text](./ptmalloc-bins.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/ptmalloc/ptmalloc-bins.png)
 
 - bins分为：unsorted bin， small bins，large bins，fast bins以及bin之外的top chunk
 - small bins管理小于512B的chunk
