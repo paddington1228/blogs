@@ -225,13 +225,10 @@ B. 这也使得大小为大于半页&小于半个chunk的large allocation变得�
 A. 使用位图，可以快速定位未使用的区域
 B. 分配信息和用户数据信息是分开存放的，增强了用户数据信息的locality
 C. 实现相较于freelist简单
-
-![Alt text](./jemalloc-arena.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/jemalloc/jemalloc-arena.png)
 
 - **arena and thread cache**：
-![Alt text](./jemalloc-thread-cache.png)
-
-更细致的数据结构介绍可以参考：TODO
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/jemalloc/jemalloc-thread-cache.png)
 
 #### jemalloc分析
 - **利用效率**：
