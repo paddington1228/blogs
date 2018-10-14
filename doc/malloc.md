@@ -252,3 +252,6 @@ C. 实现相较于freelist简单
 6. [how tcmalloc works](https://github.com/paddington1228/blogs/blob/master/papers/how-tcmalloc-works.pdf)
 7. [内存优化总结](http://www.cnhalo.net/2016/06/13/memory-optimize/)
 8. [glibc内存管理](https://paper.seebug.org/papers/Archive/refs/heap/glibc%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86ptmalloc%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.pdf)
+
+### 彩蛋
+1. **如果程序可以使用brpc这种可以在线程基础之上增加bthread的框架，将线程数限制在机器核数的4倍，同时使用jemalloc作为内存分配器，那程序的可扩展性非常可观**
