@@ -34,7 +34,7 @@
 - arena 分为main arena和none main arena，但是没太看出来两者主要的区别
 - 当线程需要分配内存时，首先获取分配区的锁，为了防止多个线程同时访问同一个分配区，在进行分配之前需要取得分配区域的锁。线程先查看线程私有实例中是否已经存在一个分配区，如果存在尝试对该分配区加锁，如果加锁成功，使用该分配区分配内存，否则，该线程搜索分配区循环链表试图获得一个空闲（没有加锁）的分配区。如果所有的分配区都已经加锁，那么 ptmalloc 会开辟一个新的分配区，把该分配区加入到全局分配区循环链表和线程的私有实例中并加锁，然后使用该分配区进行分配操作。开辟出来的新分配区一定为非主分配区，因为主分配区是从父进程那里继承来的
 - 分配流程如下：
-![Alt text](./ptmalloc-alloc-small.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/ptmalloc/ptmalloc-alloc-small.png)
 
 ##### ptmalloc分析
 - **利用效率：**
@@ -70,15 +70,13 @@
 - **映射表num_objects_to_move_[kNumClasses]**
    - 表示ThreadCache每次从Central Cache获取内存时，对应的size class每次需要从Central Cache获取Object个数
 - 下图为以8k为一页时，四个映射表的内容：
-![Alt text](./tcmalloc-sheet.png)
-
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/tcmalloc/tcmalloc-sheet.png)
 
 ##### ThreadCache
 - ThreadCache为线程级别的缓存，tcmalloc将所有ThreadCache使用双向链表连接，意在某个线程ThreadCache不够时，可以从相邻的ThreadCache steal
 - 每个ThreadCache保存FreeList  list_[kNumClasses]数组，每个FreeList独立管理一个size_class，每个size_class的Object头部前4或8字节保存下一个Object地址，形成单项链表
 - Thread Cache结构
-![Alt text](./tcmalloc-thread-cache.png)
-
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/tcmalloc/tcmalloc-thread-cache.png)
 
 - **内存分配**：
   1. 通过线程私有数据接口获取属于自己的ThreadCache，如果不存在，则创建一个
@@ -93,7 +91,7 @@
 - **慢启动算法**：
   1. 下面的示图中，只给出了慢启动算法的大体逻辑，详细可以阅读tcmalloc源码
   2. 使用慢启动算法主要应对两类问题：一类是有些线程，在其生命周期内只做很少的内存分配，如果初始便分给它很多内存，定会造成内存浪费；另外一类是有些线程总做内存释放，其不需要分配内存
-![Alt text](./tcmalloc-slow-start-small.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/tcmalloc/tcmalloc-slow-start-small.png)
 
  - **基本分析**：
  1. 分析完ThreadCache分配内存逻辑，如果对tcmalloc的性能比较感兴趣，可能要细致的想一下，tcmalloc增加ThreadCache的目的是减少race condition以及多核处理器上多线程使用共享资源的cache bouncing问题
@@ -109,7 +107,7 @@
 
 ##### CentralCache
 -  Central Cache所有的数据都在Static::central_cache_[kNumClasses]中，即采用数组的方式来管理所有的Cache，每个sizeclass的CentralFreeList对应一个数组元素，对不同sizeclass的CentralFreeList的访问是不冲突的
-![Alt text](./tcmalloc-central-cache.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/tcmalloc/tcmalloc-central-cache.png)
 
 - **TCEntry tc_slots_[kMaxNumTransferEntries]**：
 1. tc_slots_用来保存从ThreadCache返还的Object，单次返还个数是num_objects_to_move_[size_class]
@@ -129,7 +127,7 @@
 3. allocated表示Span在CentralCache的CentralFreeList中，它管理已经被切割的一系列Object
 4. 在PageHeap中的Span只是对它管理的连续内存的第一页和最后一页在PageMap pagemap_进行登记
 5. 而在CentralFreeList中的Span，它会将它管理的所有的页都在PageMap pagemap_进行注册，ThreadCache归还内存时是按Object来返回的，从Object只能找到它所在的页，最后找到它所归属的Span
-![Alt text](./tcmalloc_span.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/allocators/tcmalloc/tcmalloc_span.png)
 
 - **内存分配**：
 1. ThreadCache向CentralCache申请内存，根据申请内存的size class定位到CentralFreeList
@@ -152,8 +150,7 @@
 - PageHeap有两块缓存，一个是用于管理内存小于等于1M的连续页内存，即SpanList free_[kMaxPages]，另一个是那些内存大于1M的连续页内存，即SpanList large_
 - SpanList free_[kMaxPages]数组是按页大小递增的，即free_[1]是存放管理1页的Span，free_[2]是存放管理2页的Span，依此类推。SpanList结构下面有两个Span链表，这两个链表作用是不同的，Span
  normal存放的那些还没有释放给系统的Span，而Span returned则存放的是那些已经释放给系统的Span
-
-![Alt text](./tcmalloc_pageheap.png)
+ ![](https://github.com/paddington1228/blogs/blob/master/images/allocators/tcmalloc/tcmalloc_pageheap.png)
 
 - **内存分配**：
 1. CentralFreeList向PageHeap申请n页内存时（接口是PageHeap::New(Length n)），首先查找free_[n].normal，如果没有，则查找free_[n].returned
