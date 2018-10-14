@@ -242,3 +242,13 @@ C. 实现相较于freelist简单
 
 - **多核处理器扩展性**：
 1. jemalloc为应对多核处理器的lock contention和cache bouncing问题，使用arena，并将数量设置为核数的4倍，当线程数少于核数4倍时，每个线程可独享arena，大于核数4倍时，arena内部将锁的粒度尽可能的降低，从数据结构的设计，到分配算法的使用，jemalloc都能很好的适应多核处理
+
+### 参考文档
+1. [jemalloc](https://github.com/paddington1228/blogs/blob/master/papers/jemalloc.pdf)
+2. [scalable-jemalloc](https://github.com/paddington1228/blogs/blob/master/papers/scalable-memory-allocation-using-jemalloc.pdf)
+3. [phkmalloc](https://github.com/paddington1228/blogs/blob/master/papers/phkmalloc.pdf)
+4. [tcmalloc分析笔记](https://blog.csdn.net/zwleagle/article/details/45113303)
+5. [tcmalloc分析-知乎](https://zhuanlan.zhihu.com/p/29415507)
+6. [how tcmalloc works](https://github.com/paddington1228/blogs/blob/master/papers/how-tcmalloc-works.pdf)
+7. [内存优化总结](http://www.cnhalo.net/2016/06/13/memory-optimize/)
+8. [glibc内存管理](https://paper.seebug.org/papers/Archive/refs/heap/glibc%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86ptmalloc%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.pdf)
