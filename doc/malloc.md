@@ -191,6 +191,7 @@
 2. 相对其他内存分配器，使用较少内存的分配器可以不用有较好的cache locality，当程序的工作区间没有命中缓存时，但其工作区间在内存中是**紧密排列**的
 3. 在时间趋势上，相近时间被分配的Object，很有可能在相近的时间被使用，所以如果内存分配器可以将这些分配的Object**紧密排列**，也可以提高cache locality
 4. 从实践中，内存使用总量可以反应出cache locality的好坏，故而jemalloc将重点放在如何尽量减少内存的使用，以及尽量将分配的内存对象**紧密排列**
+5. 更多locality相关可以参考[improving cache locality](https://github.com/paddington1228/blogs/blob/master/papers/improving-cache-locality.pdf)
 
 - **multiple arena**:
 1. 多核处理器上，若两个线程线程运行在不同的核上，读写的对象却在同一个cache line中，那么会出现两个线程竞争同一个cache line的情况，这种情况被称为false sharing，false sharing会严重影响程序的性能
