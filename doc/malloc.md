@@ -245,8 +245,13 @@ C. 实现相较于freelist简单
 1. jemalloc为应对多核处理器的lock contention和cache bouncing问题，使用arena，并将数量设置为核数的4倍，当线程数少于核数4倍时，每个线程可独享arena，大于核数4倍时，arena内部将锁的粒度尽可能的降低，从数据结构的设计，到分配算法的使用，jemalloc都能很好的适应多核处理
 
 #### 扩展阅读
-1. 若使用中碰到崩溃问题，请参考[crash](https://github.com/jemalloc/jemalloc/issues/915)
-2. 若使用中碰到内存上涨，请参考[leak](https://github.com/jemalloc/jemalloc/issues/1152)
+1. 如果觉得不过瘾，可以阅读以下四篇分析：
+- [jemalloc-analysis-1](https://github.com/paddington1228/blogs/blob/master/papers/jemalloc-analysis-1.pdf)
+- [jemalloc-analysis-2](https://github.com/paddington1228/blogs/blob/master/papers/jemalloc-analysis-2.pdf)
+- [jemalloc-analysis-3](https://github.com/paddington1228/blogs/blob/master/papers/jemalloc-analysis-3.pdf)
+- [jemalloc-analysis-4](https://github.com/paddington1228/blogs/blob/master/papers/jemalloc-analysis-4.pdf)
+2. 若使用中碰到崩溃问题，请参考[crash](https://github.com/jemalloc/jemalloc/issues/915)
+3. 若使用中碰到内存上涨，请参考[leak](https://github.com/jemalloc/jemalloc/issues/1152)
 
 ### 参考文档
 1. [jemalloc](https://github.com/paddington1228/blogs/blob/master/papers/jemalloc.pdf)
