@@ -43,7 +43,7 @@
 
 ##### 实践经验
 **boost asio**:
-![Alt text](./thread-model-sample-1.png)
+![](https://github.com/paddington1228/blogs/blob/master/images/thinking-in-server/thread-model-sample-1.png)
 
 
 - **使用场景**： boost asio使用proactor模型，asio设置两个线程池：worker线程池和callback线程池，worker线程池负责网络数据的接收和发送，callback线程池负责异步回调，如果一个计算密集型同时拥有多个下游的服务程序除了使用boost asio，为了提升计算效率，也会增加一个供计算使用的线程池，当收到一个请求时，基本流程：使用computation thread pool做计算->使用boost workers发送网络请求->使用boost workers接收网络请求->使用boost callback回调 ->继续使用computation thread pool做计算
