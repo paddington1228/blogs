@@ -69,6 +69,10 @@
 ****
 
 #### 负载均衡
+- 常用的负载均衡算法包含：round robin、随机分流、WRR分流算法、一致性哈希，以及brpc所使用的[lalb](https://github.com/brpc/brpc/blob/master/docs/cn/lalb.md)
+- 随机分流和round robin存在的问题是不能依据下游服务器的性能以及网络指标分配流量，而brpc的lalb能够依据下游服务器的延时和吞吐量做分流，能够较好的负载均衡
+
+****
 
 ### 业务架构
 
