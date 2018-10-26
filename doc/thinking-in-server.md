@@ -43,7 +43,7 @@
 
 ##### 实践经验
 **boost asio**:
-![](https://github.com/paddington1228/blogs/blob/master/images/thinking-in-server/thread-model-sample-1.png)
+![Alt text](./thread-model-sample-1.png)
 
 
 - **使用场景**： boost asio使用proactor模型，asio设置两个线程池：worker线程池和callback线程池，worker线程池负责网络数据的接收和发送，callback线程池负责异步回调，如果一个计算密集型同时拥有多个下游的服务程序除了使用boost asio，为了提升计算效率，也会增加一个供计算使用的线程池，当收到一个请求时，基本流程：使用computation thread pool做计算->使用boost workers发送网络请求->使用boost workers接收网络请求->使用boost callback回调 ->继续使用computation thread pool做计算
@@ -78,6 +78,8 @@
 1. 有些功能，带来的效益不是很大，但是对服务性能有较为明显的影响，那这部分功能在需要降级时，为了保证用户体验和主要功能的稳定，是可以暂时关闭的
 2. 对于公有模块，比如搜索、推荐、站外等流量都要访问用户信息、库存信息，在双十一这种流量突增的时刻，有些用户信息、库存是可以做降级，而且对收入的影响较小
 3. **总之，降级就是为了在保证收入和用户体验的情况下，将一些不是那么主要但又影响程序性能的功能暂时关闭掉**
+
+****
 
 #### 业务规划
 - 服务程序的性能需要不断的优化，而良好的业务规划对改善服务的性能起着很重要的作用
