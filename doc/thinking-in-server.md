@@ -58,6 +58,7 @@
 #### 削减竞争
 线程加锁访问资源，所有线程串行访问临界区，不仅影响程序并发，而且会因争抢锁损耗性能，因此，程序为了获得良好的性能，要削减竞争(reduce contention); 除了我们能够感知到的对共享资源的竞争，还有比较底层的对CPU cache line的竞争，对cache line的竞争会引起f[alse sharing](https://github.com/paddington1228/blogs/blob/master/papers/cache%20line.pdf)问题
 
+
 ##### 有效方案
 - **thread local cache**：为每个线程分配独立的内存空间，其他线程不可以访问，完全没有竞争，thread local cache已经在tcmalloc、jemalloc上使用，验证可以明显提升程序性能
 - **minimize critical section**：有的临界区本可以不那么大，比如使用lock锁住两个共享资源A、B，但对于A、B的修改并没有明显的关联，则可以增加一个锁来分别保护共享资源A、B
@@ -71,6 +72,11 @@
 #### 负载均衡
 - 常用的负载均衡算法包含：round robin、随机分流、WRR分流算法、一致性哈希，以及brpc所使用的[lalb](https://github.com/brpc/brpc/blob/master/docs/cn/lalb.md)
 - 随机分流和round robin存在的问题是不能依据下游服务器的性能以及网络指标分配流量，而brpc的lalb能够依据下游服务器的延时和吞吐量做分流，能够较好的负载均衡
+
+****
+
+#### 压缩算法
+- 目前比较主流的压缩算法中，性能比较好的是lz4压缩算法，网络请求往往需要响应比较多的数据，使用较好的压缩算法能缓解网络传输压力，压缩算法的性能对比可以参考[evaluating databse compression methods](https://www.percona.com/blog/2016/04/13/evaluating-database-compression-methods-update/)
 
 ****
 
