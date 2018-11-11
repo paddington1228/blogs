@@ -28,10 +28,12 @@
 #### arena是什么
 - 基于上述给出的基本介绍，简单来说，arena就是使用placement new创建对象的内存池
 
-****
+***
 
 #### 为什么使用arena
 - 谷歌官方文档有一篇关于arena的介绍，其中标注了使用arena可以提升程序性能的原因，详情请查看: [google arena](https://developers.google.com/protocol-buffers/docs/reference/arenas)
+
+****
 
 - 在多核处理器上内存的分配和使用要考虑到：
 1. 当内存分配和释放的频率增很高时，怎么有效降低内存分配和释放的频率？因为内存分配和释放的频率涉及：与操作系统打交到的频率，内存分配器比如tcmalloc、jemalloc内部核心算法运转的频率，这两者频率越高越影响程序性能
@@ -44,3 +46,9 @@
 
 #### arena怎么使用
 - 谷歌文档建议对于服务端程序，一个完成的请求，使用一个arena，弄懂arena基本算法之后，还可以探索更多应用的可能性，具体api使用方式，可以参考谷歌官方文档[google arena](https://developers.google.com/protocol-buffers/docs/reference/arenas)以及其源码
+
+****
+
+#### arena能带来什么
+- 引用谷歌官方文档的话：early adoption shows 20% to
+50% improvement in some Google binaries. 文档地址：[v3.0.0-alpha-2](https://github.com/protocolbuffers/protobuf/releases?after=v3.0.0-alpha-2)
